@@ -18,6 +18,10 @@ Console.Clear();
 Console.WriteLine("Player 2");
 board2 = PlaceShip(board2);
 Console.Clear();
+FillBoard(board1);
+FillBoard(board2);
+FillBoard(ShotBoard1);
+FillBoard(ShotBoard2);
 
 
 }
