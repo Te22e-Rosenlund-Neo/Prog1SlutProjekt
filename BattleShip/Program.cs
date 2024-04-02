@@ -17,10 +17,10 @@ void GameLoop()
     p1Health = 3;
     p2Health = 3;
 Console.WriteLine("Player 1");
-board1 = PlaceShip(board1);
+(Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
 Console.Clear();
 Console.WriteLine("Player 2");
-board2 = PlaceShip(board2);
+(Ship, Ship, Ship) ShipsP2 = PlaceShip(board1);
 Console.Clear();
 FillBoard(board1);
 FillBoard(board2);
