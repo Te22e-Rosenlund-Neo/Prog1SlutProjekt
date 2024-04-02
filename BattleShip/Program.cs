@@ -29,7 +29,7 @@ FillBoard(ShotBoard2);
 
 
 }
-static string[,] PlaceShip(string[,] board)
+static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
 Console.Clear();
     for (int i = 0; i < board.GetLength(0); i++){
@@ -43,15 +43,31 @@ Console.Clear();
         Console.WriteLine();
     }
     Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
-    (int, int) BigShipP1 = TryShipInput(8, 0);
-    Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left part of the ship is going to be");
-    (int, int) MediumShipP1 = TryShipInput(8,0);
-    Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
-    (int, int) SmalShipP1 = TryShipInput(8,0);
-    Console.Clear();
-    return board;
-}
+    (int, int) BigShip = TryShipInput(8, 0);
+    string BigRotation = RotationInput();
+    Ship Big = new Ship(3, BigRotation, (BigShip.Item1, BigShip.Item2));
 
+    Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left part of the ship is going to be");
+    (int, int) MediumShip = TryShipInput(8,0);
+     string mediumRotation = RotationInput();
+    Ship Medium = new Ship(2, mediumRotation, (MediumShip.Item1, MediumShip.Item2));
+
+    Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
+    (int, int) SmalShip = TryShipInput(8,0);
+     string smallRotation = RotationInput();
+    Ship Small = new Ship(1, smallRotation, (SmalShip.Item1, SmalShip.Item2));
+    Console.Clear();
+    return (Big, Medium, Small);
+}
+static string RotationInput(){
+    string rotation;
+    do{
+        Console.WriteLine("What rotation should the ship be (Vertical=(v) or Horizontal=(h))");
+        rotation = Console.ReadLine()?? "";
+    }while(rotation != "v" || rotation != "h");
+
+    return rotation;
+}
 
 static (int, int) TryShipInput(int MaxValue, int MinValue){
 int Value;
@@ -101,9 +117,24 @@ return board;
     Console.WriteLine(player + "where do you wish to shoot?");
     (int, int) shot = TryShipInput(8, 0);
 
-    if(DefendingBoard[shot.Item1, shot.Item2] == "X"){
+    if(DefendingBoard[shot.Item1, shot.Item2] == "B"){
         Console.WriteLine("Hit");
         HitBoard[shot.Item1, shot.Item2] = "X";
+        DefendingBoard[shot.Item1, shot.Item2] = "X";
+        if(DefendingBoard[shot.Item1+1, shot.Item2] == "B"){
+
+        }else if(DefendingBoard[shot.Item1-1, shot.Item2] == "B"){
+
+        }else if(DefendingBoard[shot.Item1, shot.Item2+1] == "B"){
+
+        }else if(DefendingBoard[shot.Item1, shot.Item2-1] == "B"){
+            
+        }else{
+            defendingHealth -= 1;
+        }
+
+
+
     }else{
         Console.WriteLine("Miss");
         HitBoard[shot.Item1, shot.Item2] = "O";
