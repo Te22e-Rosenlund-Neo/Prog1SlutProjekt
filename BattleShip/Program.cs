@@ -1,4 +1,9 @@
 ﻿//vi använder oss av array då brädet inte behöver ha en dynamisk storlek, och då blir en array bättre då den är lite snabbare när vi vill komma åt specifika element
+using System.Reflection.PortableExecutable;
+
+// O = shot but miss
+// X = shot with hit, or your ship location
+// - = not shot at all, or empty space
 string[,] board1 = new string[8, 8];
 string[,] board2 = new string[8, 8];
 int p1Health;
@@ -6,7 +11,7 @@ int p2Health;
 
 string[,] ShotBoard1 = new string[8, 8];
 string[,] ShotBoard2 = new string[8, 8];
-
+GameLoop();
 
 // PlaceShip(board1);
 void Menu()
@@ -18,22 +23,40 @@ void GameLoop()
     p2Health = 3;
 Console.WriteLine("Player 1");
 (Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
+List<Ship> ShipListP1 = new(){
+    ShipsP1.Item1, ShipsP1.Item2, ShipsP1.Item3
+};
+foreach(Ship Instance in ShipListP1){
+    foreach(var cord in Instance.Cords){
+        board1[cord.Item1, cord.Item2] = "X";
+    }
+}
 Console.Clear();
+
 Console.WriteLine("Player 2");
 (Ship, Ship, Ship) ShipsP2 = PlaceShip(board1);
+List<Ship> ShipListP2 = new(){
+    ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
+};
+foreach(Ship Instance in ShipListP2){
+    foreach(var cord in Instance.Cords){
+        board1[cord.Item1, cord.Item2] = "X";
+    }
+}
 Console.Clear();
 FillBoard(board1);
 FillBoard(board2);
 FillBoard(ShotBoard1);
 FillBoard(ShotBoard2);
 
+DisplayBoard(board1);
+DisplayBoard(board2);
 
+Thread.Sleep(100000);
 }
-static (Ship, Ship, Ship)PlaceShip(string[,] board)
-{
-Console.Clear();
+static void DisplayBoard(string[,] board){
     for (int i = 0; i < board.GetLength(0); i++){
-        for(int j = 0; j < board.GetLength(1); j++){
+    for(int j = 0; j < board.GetLength(1); j++){
             if(board[i,j] == null){
                 Console.Write("O ");
             }else{
@@ -42,23 +65,31 @@ Console.Clear();
         }
         Console.WriteLine();
     }
+}
+static (Ship, Ship, Ship)PlaceShip(string[,] board)
+{
+    
+Console.Clear();
+    DisplayBoard(board);    
     Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
-    (int, int) BigShip = TryShipInput(8, 0);
+    (int, int) BigShip = TryShipInput(89, 10, board);
     string BigRotation = RotationInput();
     Ship Big = new Ship(3, BigRotation, (BigShip.Item1, BigShip.Item2));
 
-    Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left part of the ship is going to be");
-    (int, int) MediumShip = TryShipInput(8,0);
+    Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be");
+    (int, int) MediumShip = TryShipInput(89, 10, board);
      string mediumRotation = RotationInput();
     Ship Medium = new Ship(2, mediumRotation, (MediumShip.Item1, MediumShip.Item2));
 
     Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
-    (int, int) SmalShip = TryShipInput(8,0);
+    (int, int) SmalShip = TryShipInput(89, 10, board);
      string smallRotation = RotationInput();
     Ship Small = new Ship(1, smallRotation, (SmalShip.Item1, SmalShip.Item2));
     Console.Clear();
     return (Big, Medium, Small);
 }
+
+
 static string RotationInput(){
     string rotation;
     do{
@@ -69,7 +100,7 @@ static string RotationInput(){
     return rotation;
 }
 
-static (int, int) TryShipInput(int MaxValue, int MinValue){
+static (int, int) TryShipInput(int MaxValue, int MinValue, string[,] board){
 int Value;
 string Input;
 while(true){
@@ -80,7 +111,7 @@ do{
 }while(!int.TryParse(Input, out Value));
 
 if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
-    if(Convert.ToString(Value).Split(' ')[0] == null && Convert.ToString(Value).Split(' ')[1] == null){
+    if(board[Convert.ToInt32(Convert.ToString(Input).Split(' ')[0]), Convert.ToInt32(Convert.ToString(Input).Split(' ')[1])] == null){
         break;
     }else{
         Console.WriteLine("You already have a ship touching these positions!!!");

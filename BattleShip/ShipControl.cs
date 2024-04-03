@@ -3,24 +3,30 @@ int shiptype;
 //either vertical or Horizontal ->
 string rotation;
 (int, int) Cord1, Cord2, Cord3;
+public List<(int, int)> Cords;
 
-public Ship(int shiptype, string rotation, (int, int) Cord1){
+public Ship(int Shiptype, string rotation, (int, int) Cord1){
     this.rotation = rotation;
-    this.shiptype = shiptype;
+    this.shiptype = Shiptype;
     this.Cord1 = Cord1;
-}
 
-public Ship(int Shiptype, string rotation, (int, int) Cord1, (int, int) Cord2){
-    this.rotation = rotation;
-    this.shiptype = shiptype;
-    this.Cord1 = Cord1;
-    this.Cord2 = Cord2;
+    Cords.Add(Cord1);
+    if(Shiptype == 2){
+        if(rotation == "v"){
+            Cord2 = (Cord1.Item1+1, Cord1.Item2);
+        }else{
+            Cord2 = (Cord1.Item1, Cord2.Item2-1);
+        }
+        Cords.Add(Cord2);
+    }
+    if(shiptype == 3){
+         if(rotation == "v"){
+            Cord2 = (Cord1.Item1+1, Cord1.Item2);
+            Cord3 = (Cord1.Item1-1, Cord1.Item2);
+        }else{
+            Cord2 = (Cord1.Item1, Cord2.Item2-1);
+            Cord2 = (Cord1.Item1, Cord1.Item2+1);
+        }
+        Cords.Add(Cord3);
 }
-
-public Ship(int Shiptype, string rotation, (int, int) Cord1, (int, int) Cord2, (int, int) Cord3){
-    this.rotation = rotation;
-    this.shiptype = shiptype;
-    this.Cord2 = Cord2;
-    this.Cord3 = Cord3;
-}
-}
+}}
