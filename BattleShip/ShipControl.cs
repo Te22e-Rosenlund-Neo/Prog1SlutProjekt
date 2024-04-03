@@ -3,12 +3,12 @@ int shiptype;
 //either vertical or Horizontal ->
 string rotation;
 (int, int) Cord1, Cord2, Cord3;
-public List<(int, int)> Cords;
+public List<(int, int)> Cords = new();
 
-public Ship(int Shiptype, string rotation, (int, int) Cord1){
+public Ship(int Shiptype, string rotation, (int, int) Cord){
     this.rotation = rotation;
     this.shiptype = Shiptype;
-    this.Cord1 = Cord1;
+    Cord1 = Cord;
 
     Cords.Add(Cord1);
     if(Shiptype == 2){

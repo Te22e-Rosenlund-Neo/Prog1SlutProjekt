@@ -22,6 +22,7 @@ void GameLoop()
     p1Health = 3;
     p2Health = 3;
 Console.WriteLine("Player 1");
+Thread.Sleep(1000);
 (Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
 List<Ship> ShipListP1 = new(){
     ShipsP1.Item1, ShipsP1.Item2, ShipsP1.Item3
@@ -31,16 +32,19 @@ foreach(Ship Instance in ShipListP1){
         board1[cord.Item1, cord.Item2] = "X";
     }
 }
-// Console.Clear();
+DisplayBoard(board1);
+Thread.Sleep(10000);
+ Console.Clear();
 
 Console.WriteLine("Player 2");
+Thread.Sleep(1000);
 (Ship, Ship, Ship) ShipsP2 = PlaceShip(board1);
 List<Ship> ShipListP2 = new(){
     ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
 };
 foreach(Ship Instance in ShipListP2){
     foreach(var cord in Instance.Cords){
-        board1[cord.Item1, cord.Item2] = "X";
+        board2[cord.Item1, cord.Item2] = "X";
     }
 }
 // Console.Clear();
@@ -48,9 +52,6 @@ FillBoard(board1);
 FillBoard(board2);
 FillBoard(ShotBoard1);
 FillBoard(ShotBoard2);
-
-DisplayBoard(board1);
-DisplayBoard(board2);
 
 Thread.Sleep(100000);
 }
@@ -66,26 +67,26 @@ static void DisplayBoard(string[,] board){
         Console.WriteLine();
     }
 }
+static Ship ShipGenerator(string[,] board){
+(int, int) BigShip = TryShipInput(89, 10, board, false);
+    string BigRotation = RotationInput();
+    Ship ship = new Ship(3, BigRotation, (BigShip.Item1, BigShip.Item2));
+    Console.Clear();
+return ship;
+}
 static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
     
-// Console.Clear();
+Console.Clear();
     DisplayBoard(board);    
     Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
-    (int, int) BigShip = TryShipInput(89, 10, board, false);
-    string BigRotation = RotationInput();
-    Ship Big = new Ship(3, BigRotation, (BigShip.Item1, BigShip.Item2));
+    Ship Big = ShipGenerator(board);
 
     Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be");
-    (int, int) MediumShip = TryShipInput(89, 10, board, false);
-     string mediumRotation = RotationInput();
-    Ship Medium = new Ship(2, mediumRotation, (MediumShip.Item1, MediumShip.Item2));
+    Ship Medium = ShipGenerator(board);
 
     Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
-    (int, int) SmalShip = TryShipInput(89, 10, board, false);
-     string smallRotation = RotationInput();
-    Ship Small = new Ship(1, smallRotation, (SmalShip.Item1, SmalShip.Item2));
-    // Console.Clear();
+    Ship Small = ShipGenerator(board);
     return (Big, Medium, Small);
 }
 
@@ -95,7 +96,7 @@ static string RotationInput(){
     do{
         Console.WriteLine("What rotation should the ship be (Vertical=(v) or Horizontal=(h))");
         rotation = Console.ReadLine()?? "";
-    }while(rotation != "v" || rotation != "h");
+    }while(rotation != "v" && rotation != "h");
 
     return rotation;
 }
@@ -103,6 +104,7 @@ static string RotationInput(){
 static (int, int) TryShipInput(int MaxValue, int MinValue, string[,] board, bool shooting){
 int Value;
 string Input;
+char[] InputDigits;
 while(true){
 do{
     Console.WriteLine($"Write a value between {MinValue} and {MaxValue}");
@@ -113,17 +115,16 @@ do{
 if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
 
     if(shooting != true){
-        char[] InputDigits = Input.ToCharArray();
-        Console.WriteLine(board[3, 4]);
-        Console.WriteLine(board[InputDigits[0], InputDigits[1]]);
-        
-
-        if(board[InputDigits[0], InputDigits[1]] == null){
+        InputDigits = Input.ToCharArray();
+        Console.WriteLine(InputDigits[0] - '0');
+        Console.WriteLine(InputDigits[1] - '0');
+        if(board[InputDigits[0] - '0' -1 , InputDigits[1]- '0' -1] == null){
             break;
         }else{
             Console.WriteLine("You already have a ship touching this position!!!");
         }
     }else{
+        InputDigits = Input.ToCharArray();
         break;
     }
 
@@ -131,9 +132,7 @@ if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
     Console.WriteLine("Write a valid number (11-88)");
 }
 }
-string Value1 = Convert.ToString(Input).Split(' ')[0];
-string Value2 = Convert.ToString(Input).Split(' ')[1];
-(int, int) Values = (Convert.ToInt32(Value1), Convert.ToInt32(Value2));
+(int, int) Values = (InputDigits[0] - '0' -1, InputDigits[1] - '0' -1);
 return Values;
 
 
