@@ -74,6 +74,7 @@ static Ship ShipGenerator(string[,] board){
     Console.Clear();
 return ship;
 }
+
 static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
     
@@ -116,9 +117,7 @@ if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
 
     if(shooting != true){
         InputDigits = Input.ToCharArray();
-        Console.WriteLine(InputDigits[0] - '0');
-        Console.WriteLine(InputDigits[1] - '0');
-        if(board[InputDigits[0] - '0' -1 , InputDigits[1]- '0' -1] == null){
+        if(board[InputDigits[0] - '0'  , InputDigits[1]- '0' ] == null){
             break;
         }else{
             Console.WriteLine("You already have a ship touching this position!!!");
@@ -138,8 +137,8 @@ return Values;
 
 }
 static string[,] FillBoard(string[,] board){
-    for(int i = 0; i < board.GetLength(0)-1; i++){
-        for(int j = 0; j < board.GetLength(1)-1; j++){
+    for(int i = 0; i < board.GetLength(0); i++){
+        for(int j = 0; j < board.GetLength(1); j++){
             if(board[i,j] == null){
                 board[i,j] = "- ";
             }
@@ -151,14 +150,9 @@ return board;
 
 (string[,], string[,], int) ShootPhase(string[,] DefendingBoard, string[,] HitBoard, string player, int defendingHealth)
 {
-    for (int i = 0; i < HitBoard.GetLength(0); i++){
-        for(int j = 0; j < HitBoard.GetLength(1); j++){
-           Console.Write(HitBoard[i,j]);
-        }
-        Console.WriteLine();
-    }
+    DisplayBoard(HitBoard);
     Console.WriteLine(player + "where do you wish to shoot?");
-    (int, int) shot = TryShipInput(8, 0,HitBoard ,true);
+    (int, int) shot = TryShipInput(77, 0,HitBoard ,true);
 
     if(DefendingBoard[shot.Item1, shot.Item2] == "X "){
         Console.WriteLine("Hit");
