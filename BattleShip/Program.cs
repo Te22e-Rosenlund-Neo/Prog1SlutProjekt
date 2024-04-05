@@ -33,6 +33,7 @@ foreach(Ship Instance in ShipListP1){
     }
 }
 DisplayBoard(board1);
+board1[9,9] = "v";
 Thread.Sleep(10000);
  Console.Clear();
 
@@ -44,6 +45,7 @@ List<Ship> ShipListP2 = new(){
 };
 foreach(Ship Instance in ShipListP2){
     foreach(var cord in Instance.Cords){
+        Console.WriteLine(cord.Item1 + cord.Item2);
         board2[cord.Item1, cord.Item2] = "X";
     }
 }
@@ -67,11 +69,11 @@ static void DisplayBoard(string[,] board){
         Console.WriteLine();
     }
 }
-static Ship ShipGenerator(string[,] board){
-(int, int) BigShip = TryShipInput(89, 10, board, false);
-    string BigRotation = RotationInput();
-    Ship ship = new Ship(3, BigRotation, (BigShip.Item1, BigShip.Item2));
-    Console.Clear();
+static Ship ShipGenerator(string[,] board, int shiptype){
+(int, int) ShipCords = TryShipInput(89, 10, board, false);
+    string Rotation = RotationInput();
+    Ship ship = new Ship(shiptype, Rotation, (ShipCords.Item1, ShipCords.Item2));
+    // Console.Clear();
 return ship;
 }
 
@@ -81,13 +83,13 @@ static (Ship, Ship, Ship)PlaceShip(string[,] board)
 Console.Clear();
     DisplayBoard(board);    
     Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
-    Ship Big = ShipGenerator(board);
+    Ship Big = ShipGenerator(board, 3);
 
     Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be");
-    Ship Medium = ShipGenerator(board);
+    Ship Medium = ShipGenerator(board, 2);
 
     Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
-    Ship Small = ShipGenerator(board);
+    Ship Small = ShipGenerator(board, 1);
     return (Big, Medium, Small);
 }
 
@@ -117,7 +119,7 @@ if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
 
     if(shooting != true){
         InputDigits = Input.ToCharArray();
-        if(board[InputDigits[0] - '0'  , InputDigits[1]- '0' ] == null){
+        if(board[InputDigits[0] - '0'  -1, InputDigits[1]- '0' -1] == null){
             break;
         }else{
             Console.WriteLine("You already have a ship touching this position!!!");
