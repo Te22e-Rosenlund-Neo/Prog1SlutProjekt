@@ -2,7 +2,7 @@ class Ship{
 int shiptype;
 //either vertical or Horizontal ->
 string rotation;
-int ShipHp;
+public int ShipHp;
 (int, int) Cord1, Cord2, Cord3;
 public List<(int, int)> Cords = new();
 
@@ -39,6 +39,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         }else{
             Cord2 = (Cord1.Item1, Cord1.Item2+1);
         }
+        Cords.Add(Cord2);
     }
     if(shiptype == 3){
             Console.WriteLine($"Cord1 became {Cord1}");
@@ -60,4 +61,5 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         Cords.Add(Cord2);
         Cords.Add(Cord3);
 }
-}}
+}
+}

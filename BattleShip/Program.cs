@@ -33,7 +33,6 @@ foreach(Ship Instance in ShipListP1){
     }
 }
 DisplayBoard(board1);
-board1[9,9] = "v";
 Thread.Sleep(10000);
  Console.Clear();
 
@@ -150,30 +149,26 @@ return board;
 }
 
 
-(string[,], string[,], int) ShootPhase(string[,] DefendingBoard, string[,] HitBoard, string player, int defendingHealth)
+(string[,], string[,], int) ShootPhase(List<Ship> Ships, string[,] DefendingBoard, string[,] HitBoard, string player, int defendingHealth)
 {
     DisplayBoard(HitBoard);
     Console.WriteLine(player + "where do you wish to shoot?");
     (int, int) shot = TryShipInput(77, 0,HitBoard ,true);
 
     if(DefendingBoard[shot.Item1, shot.Item2] == "X "){
+        DefendingBoard[shot.Item1, shot.Item2] = "O ";
         Console.WriteLine("Hit");
         HitBoard[shot.Item1, shot.Item2] = "X ";
-        DefendingBoard[shot.Item1, shot.Item2] = "- ";
-        if(DefendingBoard[shot.Item1+1, shot.Item2] == "X "){
-
-        }else if(DefendingBoard[shot.Item1-1, shot.Item2] == "X "){
-
-        }else if(DefendingBoard[shot.Item1, shot.Item2+1] == "X "){
-
-        }else if(DefendingBoard[shot.Item1, shot.Item2-1] == "X "){
-            
-        }else{
-            Console.WriteLine("Sink");
-            defendingHealth -= 1;
+        foreach(Ship ship in Ships){
+            foreach((int, int) Cordinates in ship.Cords){
+                if(shot.Item1 == Cordinates.Item1 && shot.Item2 == Cordinates.Item2) {
+                    ship.ShipHp -= 1;
+                    if(ship.ShipHp <= 0){
+                        Console.WriteLine("Sunked!");
+                    }
+                }
+            }
         }
-
-
 
     }else{
         Console.WriteLine("Miss");
