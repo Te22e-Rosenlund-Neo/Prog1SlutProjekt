@@ -1,6 +1,4 @@
 ﻿//vi använder oss av array då brädet inte behöver ha en dynamisk storlek, och då blir en array bättre då den är lite snabbare när vi vill komma åt specifika element
-using System.Reflection.PortableExecutable;
-
 // O = shot but miss
 // X = shot with hit, or your ship location
 // - = not shot at all, or empty space
@@ -8,7 +6,6 @@ string[,] board1 = new string[8, 8];
 string[,] board2 = new string[8, 8];
 int p1Health;
 int p2Health;
-
 string[,] ShotBoard1 = new string[8, 8];
 string[,] ShotBoard2 = new string[8, 8];
 GameLoop();
@@ -33,36 +30,42 @@ foreach(Ship Instance in ShipListP1){
     }
 }
 DisplayBoard(board1);
-Thread.Sleep(10000);
+Thread.Sleep(1000);
  Console.Clear();
 
 Console.WriteLine("Player 2");
 Thread.Sleep(1000);
-(Ship, Ship, Ship) ShipsP2 = PlaceShip(board1);
+(Ship, Ship, Ship) ShipsP2 = PlaceShip(board2);
 List<Ship> ShipListP2 = new(){
     ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
 };
-foreach(Ship Instance in ShipListP2){
-    foreach(var cord in Instance.Cords){
-        Console.WriteLine(cord.Item1 + cord.Item2);
-        board2[cord.Item1, cord.Item2] = "X";
+foreach(Ship Instance2 in ShipListP2){
+    foreach(var cord2 in Instance2.Cords){
+        Console.WriteLine(cord2.Item1 + cord2.Item2);
+        board2[cord2.Item1, cord2.Item2] = "X";
     }
 }
+DisplayBoard(board2);
 // Console.Clear();
-FillBoard(board1);
-FillBoard(board2);
-FillBoard(ShotBoard1);
-FillBoard(ShotBoard2);
 
-Thread.Sleep(100000);
+
+ShootPhase(ShipListP2, board2, ShotBoard1, "Player1", p2Health);
+Console.Clear();
+
+DisplayBoard(ShotBoard1);
+Console.WriteLine("--------------------------------------\n\n");
+DisplayBoard(board2);
+Thread.Sleep(15000);
 }
 static void DisplayBoard(string[,] board){
     for (int i = 0; i < board.GetLength(0); i++){
     for(int j = 0; j < board.GetLength(1); j++){
             if(board[i,j] == null){
-                Console.Write("O ");
-            }else{
+                Console.Write("- ");
+            }else if(board[i,j] == "X"){
                 Console.Write("X ");
+            }else{
+                Console.Write("O ");
             }
         }
         Console.WriteLine();
@@ -79,7 +82,6 @@ return ship;
 static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
     
-Console.Clear();
     DisplayBoard(board);    
     Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
     Ship Big = ShipGenerator(board, 3);
@@ -137,34 +139,25 @@ return Values;
 
 
 }
-static string[,] FillBoard(string[,] board){
-    for(int i = 0; i < board.GetLength(0); i++){
-        for(int j = 0; j < board.GetLength(1); j++){
-            if(board[i,j] == null){
-                board[i,j] = "- ";
-            }
-        }
-    }
-return board;
-}
 
 
-(string[,], string[,], int) ShootPhase(List<Ship> Ships, string[,] DefendingBoard, string[,] HitBoard, string player, int defendingHealth)
+(string[,], string[,], int) ShootPhase(List<Ship> DefendingShips, string[,] DefendingBoard, string[,] HitBoard, string ShootingPlayer, int defendingHealth)
 {
     DisplayBoard(HitBoard);
-    Console.WriteLine(player + "where do you wish to shoot?");
-    (int, int) shot = TryShipInput(77, 0,HitBoard ,true);
+    Console.WriteLine(ShootingPlayer + "where do you wish to shoot?");
+    (int, int) shot = TryShipInput(89, 10,HitBoard ,true);
 
-    if(DefendingBoard[shot.Item1, shot.Item2] == "X "){
-        DefendingBoard[shot.Item1, shot.Item2] = "O ";
-        Console.WriteLine("Hit");
-        HitBoard[shot.Item1, shot.Item2] = "X ";
-        foreach(Ship ship in Ships){
+    if(DefendingBoard[shot.Item1, shot.Item2] == "X"){
+        DefendingBoard[shot.Item1, shot.Item2] = null!;
+        Console.WriteLine("Hit!");
+        HitBoard[shot.Item1, shot.Item2] = "X";
+        foreach(Ship ship in DefendingShips){
             foreach((int, int) Cordinates in ship.Cords){
                 if(shot.Item1 == Cordinates.Item1 && shot.Item2 == Cordinates.Item2) {
                     ship.ShipHp -= 1;
                     if(ship.ShipHp <= 0){
                         Console.WriteLine("Sunked!");
+                        defendingHealth -= 1;
                     }
                 }
             }
@@ -172,9 +165,8 @@ return board;
 
     }else{
         Console.WriteLine("Miss");
-        HitBoard[shot.Item1, shot.Item2] = "O ";
+        HitBoard[shot.Item1, shot.Item2] = "O";
     }
-
 return (DefendingBoard, HitBoard, defendingHealth);
 
 }

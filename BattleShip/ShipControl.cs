@@ -42,21 +42,12 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         Cords.Add(Cord2);
     }
     if(shiptype == 3){
-            Console.WriteLine($"Cord1 became {Cord1}");
          if(rotation.ToLower()  == "v"){
             Cord2 = (Cord1.Item1+1, Cord1.Item2);
-            Console.WriteLine($"Cord2 was set to{Cord1.Item1+1}{Cord1.Item2}");
-            Console.WriteLine($"Cord2 became {Cord2}");
             Cord3 = (Cord1.Item1-1, Cord1.Item2);
-            Console.WriteLine($"Cord3 was set to{Cord1.Item1-1}{Cord1.Item2}");
-            Console.WriteLine($"Cord3 became {Cord3}");
         }else{
             Cord2 = (Cord1.Item1, Cord1.Item2-1);
-            Console.WriteLine($"Cord2 was set to{Cord1.Item1}{Cord1.Item2-1}");
-            Console.WriteLine($"Cord2 became {Cord2}");
             Cord3 = (Cord1.Item1, Cord1.Item2+1);
-            Console.WriteLine($"Cord3 was set to{Cord1.Item1}{Cord1.Item2+1}");
-            Console.WriteLine($"Cord3 became {Cord3}");
         }
         Cords.Add(Cord2);
         Cords.Add(Cord3);
