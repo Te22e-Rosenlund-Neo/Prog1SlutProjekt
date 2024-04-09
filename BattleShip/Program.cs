@@ -93,7 +93,7 @@ static void DisplayBoard(string[,] board){
     }
 }
 static Ship ShipGenerator(string[,] board, int shiptype){
-(int, int) ShipCords = TryShipInput(89, 10, board, false);
+(int, int) ShipCords = TryShipInput(8, 1, board, false);
     string Rotation = RotationInput();
     Ship ship = new Ship(shiptype, Rotation, (ShipCords.Item1, ShipCords.Item2));
     // Console.Clear();
@@ -126,21 +126,21 @@ static string RotationInput(){
     return rotation;
 }
 
-static (int, int) TryShipInput(int MaxValue, int MinValue, string[,] board, bool shooting){
+static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool shooting){
 int Value;
 string Input;
 char[] InputDigits;
 while(true){
 do{
-    Console.WriteLine($"Write a value between {MinValue} and {MaxValue}");
+    Console.WriteLine($"Write a value between {1} and {8} for a row and a column (ex 37)");
     Input = Console.ReadLine()?? "";
 
 }while(!int.TryParse(Input, out Value));
 
-if(Convert.ToInt32(Input) > MinValue && Convert.ToInt32(Input) < MaxValue){
+InputDigits = Input.ToCharArray();
+if(Convert.ToInt32(InputDigits[0]) > MinValue && Convert.ToInt32(InputDigits[0]) < MaxValue && Convert.ToInt32(InputDigits[1]) > MinValue && Convert.ToInt32(InputDigits[0]) < MaxValue){
 
     if(shooting != true){
-        InputDigits = Input.ToCharArray();
         if(board[InputDigits[0] - '0'  -1, InputDigits[1]- '0' -1] == null){
             break;
         }else{
@@ -165,11 +165,11 @@ return Values;
 (string[,], string[,], int) ShootPhase(List<Ship> DefendingShips, string[,] DefendingBoard, string[,] HitBoard, string ShootingPlayer, int defendingHealth)
 {
     DisplayBoard(HitBoard);
-    Console.WriteLine(ShootingPlayer + "where do you wish to shoot?");
-    (int, int) shot = TryShipInput(89, 10,HitBoard ,true);
+    Console.WriteLine(ShootingPlayer + ":    where do you wish to shoot?");
+    (int, int) shot = TryShipInput(1, 8,HitBoard ,true);
 
     if(DefendingBoard[shot.Item1, shot.Item2] == "X"){
-        DefendingBoard[shot.Item1, shot.Item2] = null!;
+        DefendingBoard[shot.Item1, shot.Item2] = "O";
         Console.WriteLine("Hit!");
         HitBoard[shot.Item1, shot.Item2] = "X";
         foreach(Ship ship in DefendingShips){
@@ -188,7 +188,7 @@ return Values;
         Console.WriteLine("Miss");
         HitBoard[shot.Item1, shot.Item2] = "O";
     }
-Console.WriteLine(defendingHealth);
+Console.WriteLine($"enemy ship count: {defendingHealth}");
 Thread.Sleep(1500);
 return (DefendingBoard, HitBoard, defendingHealth);
 
