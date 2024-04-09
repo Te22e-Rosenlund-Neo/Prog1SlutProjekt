@@ -30,7 +30,7 @@ foreach(Ship Instance in ShipListP1){
     }
 }
 DisplayBoard(board1);
-Thread.Sleep(1000);
+Thread.Sleep(2500);
  Console.Clear();
 
 Console.WriteLine("Player 2");
@@ -46,15 +46,36 @@ foreach(Ship Instance2 in ShipListP2){
     }
 }
 DisplayBoard(board2);
-// Console.Clear();
-
-
-ShootPhase(ShipListP2, board2, ShotBoard1, "Player1", p2Health);
+Thread.Sleep(2500);
 Console.Clear();
 
-DisplayBoard(ShotBoard1);
-Console.WriteLine("--------------------------------------\n\n");
-DisplayBoard(board2);
+while(true){
+Console.Clear();
+(string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, board2, ShotBoard1, "player1", p2Health);
+board2 = P1Shot.Item1;
+ShotBoard1 = P1Shot.Item2;
+p2Health = P1Shot.Item3;
+
+    if(p2Health <= 0){
+        Console.WriteLine("Player 1 Won!");
+        Console.WriteLine("Final board: ");
+        DisplayBoard(board1);
+        break;
+    }  
+Console.Clear(); 
+(string[,], string[,], int) P2Shot = ShootPhase(ShipListP1, board1, ShotBoard2, "player2", p1Health);
+board1 = P2Shot.Item1;
+ShotBoard2 = P2Shot.Item2;
+p1Health = P2Shot.Item3;
+
+    if(p1Health <= 0){
+        Console.WriteLine("Player 2 Won!");
+        Console.WriteLine("Final board: ");
+        DisplayBoard(board2);
+        break;
+    } 
+}
+Console.WriteLine("Game finished!");
 Thread.Sleep(15000);
 }
 static void DisplayBoard(string[,] board){
@@ -167,6 +188,8 @@ return Values;
         Console.WriteLine("Miss");
         HitBoard[shot.Item1, shot.Item2] = "O";
     }
+Console.WriteLine(defendingHealth);
+Thread.Sleep(1500);
 return (DefendingBoard, HitBoard, defendingHealth);
 
 }
