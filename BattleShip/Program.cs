@@ -18,7 +18,7 @@ void GameLoop()
 {
     p1Health = 3;
     p2Health = 3;
-Console.WriteLine("Player 1");
+writeText("Player 1", "Green");
 Thread.Sleep(1000);
 (Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
 List<Ship> ShipListP1 = new(){
@@ -33,7 +33,7 @@ DisplayBoard(board1);
 Thread.Sleep(2500);
  Console.Clear();
 
-Console.WriteLine("Player 2");
+writeText("Player 2", "Green");
 Thread.Sleep(1000);
 (Ship, Ship, Ship) ShipsP2 = PlaceShip(board2);
 List<Ship> ShipListP2 = new(){
@@ -41,7 +41,6 @@ List<Ship> ShipListP2 = new(){
 };
 foreach(Ship Instance2 in ShipListP2){
     foreach(var cord2 in Instance2.Cords){
-        Console.WriteLine(cord2.Item1 + cord2.Item2);
         board2[cord2.Item1, cord2.Item2] = "X";
     }
 }
@@ -57,8 +56,8 @@ ShotBoard1 = P1Shot.Item2;
 p2Health = P1Shot.Item3;
 
     if(p2Health <= 0){
-        Console.WriteLine("Player 1 Won!");
-        Console.WriteLine("Final board: ");
+        writeText("Player 1 has won!", "Green");
+        writeText("Final Board:     ", "Green");
         DisplayBoard(board1);
         break;
     }  
@@ -69,13 +68,13 @@ ShotBoard2 = P2Shot.Item2;
 p1Health = P2Shot.Item3;
 
     if(p1Health <= 0){
-        Console.WriteLine("Player 2 Won!");
-        Console.WriteLine("Final board: ");
+        writeText("Player 2 has won!", "Green");
+        writeText("Final Board:     ", "Green");
         DisplayBoard(board2);
         break;
     } 
 }
-Console.WriteLine("Game finished!");
+writeText("Game Finished!", "Red");
 Thread.Sleep(15000);
 }
 static void DisplayBoard(string[,] board){
@@ -93,25 +92,44 @@ static void DisplayBoard(string[,] board){
     }
 }
 static Ship ShipGenerator(string[,] board, int shiptype){
-(int, int) ShipCords = TryShipInput(8, 1, board, false);
+(int, int) ShipCords = TryShipInput(1, 8, board, false);
     string Rotation = RotationInput();
     Ship ship = new Ship(shiptype, Rotation, (ShipCords.Item1, ShipCords.Item2));
     // Console.Clear();
 return ship;
 }
+static void writeText(string text, string color){
+    if(color == "Red"){
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(text);
+        Console.ResetColor();
+    }
+    if(color == "Green"){
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(text);
+        Console.ResetColor();
+    }
+}  
 
 static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
     
     DisplayBoard(board);    
-    Console.WriteLine("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be");
+    writeText("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", "Green");
     Ship Big = ShipGenerator(board, 3);
+    Thread.Sleep(1000);
+    Console.Clear();
 
-    Console.WriteLine("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be");
+    DisplayBoard(board);  
+    writeText("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be", "Green");
     Ship Medium = ShipGenerator(board, 2);
+    Thread.Sleep(1000);
+    Console.Clear();
 
-    Console.WriteLine("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be");
+    DisplayBoard(board);  
+    writeText("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be", "Green");
     Ship Small = ShipGenerator(board, 1);
+    Thread.Sleep(1000);
     return (Big, Medium, Small);
 }
 
@@ -130,24 +148,27 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
 int Value;
 string Input;
 char[] InputDigits;
+int value1;
+int value2;
 while(true){
 do{
-    Console.WriteLine($"Write a value between {1} and {8} for a row and a column (ex 37)");
+    writeText($"Write a value  {MinValue} through {MaxValue} for a row and a column (ex 37)", "Green");
     Input = Console.ReadLine()?? "";
 
 }while(!int.TryParse(Input, out Value));
 
 InputDigits = Input.ToCharArray();
-if(Convert.ToInt32(InputDigits[0]) > MinValue && Convert.ToInt32(InputDigits[0]) < MaxValue && Convert.ToInt32(InputDigits[1]) > MinValue && Convert.ToInt32(InputDigits[0]) < MaxValue){
+value1 = InputDigits[0] - '0' -1;
+value2 = InputDigits[1] - '0' -1;
+if(value1 >= 0 && value2 >= 0 && value1 <= MaxValue-1 && value2 <= MaxValue-1){
 
     if(shooting != true){
-        if(board[InputDigits[0] - '0'  -1, InputDigits[1]- '0' -1] == null){
+        if(board[value1, value2] == null){
             break;
         }else{
-            Console.WriteLine("You already have a ship touching this position!!!");
+            writeText("You already have a ship touching this position!!!", "Red");
         }
     }else{
-        InputDigits = Input.ToCharArray();
         break;
     }
 
@@ -155,7 +176,7 @@ if(Convert.ToInt32(InputDigits[0]) > MinValue && Convert.ToInt32(InputDigits[0])
     Console.WriteLine("Write a valid number (11-88)");
 }
 }
-(int, int) Values = (InputDigits[0] - '0' -1, InputDigits[1] - '0' -1);
+(int, int) Values = (value1, value2);
 return Values;
 
 
@@ -165,7 +186,7 @@ return Values;
 (string[,], string[,], int) ShootPhase(List<Ship> DefendingShips, string[,] DefendingBoard, string[,] HitBoard, string ShootingPlayer, int defendingHealth)
 {
     DisplayBoard(HitBoard);
-    Console.WriteLine(ShootingPlayer + ":    where do you wish to shoot?");
+    writeText(ShootingPlayer + ":    where do you wish to shoot?", "Green");
     (int, int) shot = TryShipInput(1, 8,HitBoard ,true);
 
     if(DefendingBoard[shot.Item1, shot.Item2] == "X"){
