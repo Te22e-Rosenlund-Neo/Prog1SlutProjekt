@@ -91,12 +91,13 @@ static void DisplayBoard(string[,] board){
         Console.WriteLine();
     }
 }
-static Ship ShipGenerator(string[,] board, int shiptype){
+static (Ship, string[,]) ShipGenerator(string[,] board, int shiptype){
 (int, int) ShipCords = TryShipInput(1, 8, board, false);
+    board[ShipCords.Item1, ShipCords.Item2] = "X";
     string Rotation = RotationInput();
     Ship ship = new Ship(shiptype, Rotation, (ShipCords.Item1, ShipCords.Item2));
     // Console.Clear();
-return ship;
+return (ship, board);
 }
 static void writeText(string text, string color){
     if(color == "Red"){
@@ -113,22 +114,25 @@ static void writeText(string text, string color){
 
 static (Ship, Ship, Ship)PlaceShip(string[,] board)
 {
-    
     DisplayBoard(board);    
     writeText("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", "Green");
-    Ship Big = ShipGenerator(board, 3);
+    var returned = ShipGenerator(board, 3);
+    Ship Big = returned.Item1;
+    board = returned.Item2;
     Thread.Sleep(1000);
     Console.Clear();
 
     DisplayBoard(board);  
     writeText("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be", "Green");
-    Ship Medium = ShipGenerator(board, 2);
+    returned = ShipGenerator(board, 2);
+    Ship Medium = returned.Item1;
+    board = returned.Item2;
     Thread.Sleep(1000);
     Console.Clear();
 
     DisplayBoard(board);  
     writeText("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be", "Green");
-    Ship Small = ShipGenerator(board, 1);
+    Ship Small = ShipGenerator(board, 1).Item1;
     Thread.Sleep(1000);
     return (Big, Medium, Small);
 }
@@ -144,7 +148,7 @@ static string RotationInput(){
     return rotation;
 }
 
-static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool shooting){
+static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool shooting, List<(int, int)> CordinateLis = null!){
 int Value;
 string Input;
 char[] InputDigits;
