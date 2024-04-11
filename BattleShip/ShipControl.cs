@@ -1,3 +1,4 @@
+namespace ShipClass{
 class Ship{
 int shiptype;
 //either vertical or Horizontal ->
@@ -11,8 +12,22 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
     ShipHp = Shiptype;
     this.shiptype = Shiptype;
     Cord1 = Cord;
-    Cords.Add(Cord1);
 
+    if(Shiptype > 1){
+        if(Cord == (0,0)){
+            Cord = (1,0);
+            Console.WriteLine("Cordinate was moved due to corner placement not working");
+        }else if(Cord == (0,7)){
+         Cord = (1,7);   
+         Console.WriteLine("Cordinate was moved due to corner placement not working");
+        }else if(Cord == (7,0)){
+            Cord = (6,0);
+            Console.WriteLine("Cordinate was moved due to corner placement not working");
+        }else if(Cord == (7,7)){
+            Cord = (6,7);
+            Console.WriteLine("Cordinate was moved due to corner placement not working");
+        }
+    }
     if(shiptype == 3){ 
         if(Cord1.Item1 == 0 || Cord1.Item1 == 7){
         rotation = "h";
@@ -51,6 +66,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         }
         Cords.Add(Cord2);
         Cords.Add(Cord3);
+}
 }
 }
 }

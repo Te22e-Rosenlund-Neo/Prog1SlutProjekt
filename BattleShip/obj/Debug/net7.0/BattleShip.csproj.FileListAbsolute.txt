@@ -26,3 +26,17 @@ C:\Users\erikr\OneDrive\Dokument\personal websiter\Prog1SlutProjekt\BattleShip\o
 C:\Users\erikr\OneDrive\Dokument\personal websiter\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.pdb
 C:\Users\erikr\OneDrive\Dokument\personal websiter\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.genruntimeconfig.cache
 C:\Users\erikr\OneDrive\Dokument\personal websiter\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\ref\BattleShip.dll
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\bin\Debug\net7.0\BattleShip.exe
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\bin\Debug\net7.0\BattleShip.deps.json
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\bin\Debug\net7.0\BattleShip.runtimeconfig.json
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\bin\Debug\net7.0\BattleShip.dll
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\bin\Debug\net7.0\BattleShip.pdb
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.AssemblyInfoInputs.cache
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.AssemblyInfo.cs
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.csproj.CoreCompileInputs.cache
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.dll
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\refint\BattleShip.dll
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.pdb
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\BattleShip.genruntimeconfig.cache
+C:\Users\neo.rosenlund\Documents\Prog1SlutProjRiktig\Prog1SlutProjekt\BattleShip\obj\Debug\net7.0\ref\BattleShip.dll
