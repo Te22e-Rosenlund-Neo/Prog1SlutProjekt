@@ -13,14 +13,17 @@ GameLoop();
 //---------------------------------------------------------------------------------------------------------------------------------
 void GameLoop()
 {
+    // 3 = shipcount
     p1Health = 3;
     p2Health = 3;
     writeText("Player 1", "Green");
     Thread.Sleep(1000);
+    //asks player to place their ships
     (Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
     List<Ship> ShipListP1 = new(){
     ShipsP1.Item1, ShipsP1.Item2, ShipsP1.Item3
 };
+    //sets players ship cordinates to be on their board
     foreach (Ship Instance in ShipListP1)
     {
         foreach (var cord in Instance.Cords)
@@ -28,16 +31,19 @@ void GameLoop()
             board1[cord.Item1, cord.Item2] = "X";
         }
     }
+    //shows board
     DisplayBoard(board1);
     Thread.Sleep(2500);
     Console.Clear();
 
+    //asks player to place their ships
     writeText("Player 2", "Green");
     Thread.Sleep(1000);
     (Ship, Ship, Ship) ShipsP2 = PlaceShip(board2);
     List<Ship> ShipListP2 = new(){
     ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
 };
+    //sets players ship cordinates to be on their board
     foreach (Ship Instance2 in ShipListP2)
     {
         foreach (var cord2 in Instance2.Cords)
@@ -45,13 +51,17 @@ void GameLoop()
             board2[cord2.Item1, cord2.Item2] = "X";
         }
     }
+    //shows board
     DisplayBoard(board2);
     Thread.Sleep(2500);
     Console.Clear();
 
+    //gameloop, shooting 
     while (true)
     {
         Console.Clear();
+        //player shoots, 
+        
         (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, board2, ShotBoard1, "player1", p2Health);
         board2 = P1Shot.Item1;
         ShotBoard1 = P1Shot.Item2;
@@ -186,32 +196,33 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
         InputDigits = Input.ToCharArray();
         value1 = InputDigits[0] - '0' - 1;
         value2 = InputDigits[1] - '0' - 1;
-    if(InputDigits.Length < 3){
-        if (value1 >= 0 && value2 >= 0 && value1 <= MaxValue - 1 && value2 <= MaxValue - 1)
+        if (InputDigits.Length < 3)
         {
-        
-            if (shooting != true)
+            if (value1 >= 0 && value2 >= 0 && value1 <= MaxValue - 1 && value2 <= MaxValue - 1)
             {
-                if (board[value1, value2] == null)
+
+                if (shooting != true)
                 {
-                    break;
+                    if (board[value1, value2] == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        writeText("You already have a ship touching this position!!!", "Red");
+                    }
                 }
                 else
                 {
-                    writeText("You already have a ship touching this position!!!", "Red");
+                    break;
                 }
+
             }
             else
             {
-                break;
+                Console.WriteLine("Write a valid number (11-88)");
             }
-
         }
-        else
-        {
-            Console.WriteLine("Write a valid number (11-88)");
-        }
-    }
     }
     (int, int) Values = (value1, value2);
     return Values;
