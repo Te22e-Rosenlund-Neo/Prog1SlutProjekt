@@ -61,7 +61,7 @@ void GameLoop()
     {
         Console.Clear();
         //player shoots, 
-        
+
         (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, board2, ShotBoard1, "player1", p2Health);
         board2 = P1Shot.Item1;
         ShotBoard1 = P1Shot.Item2;
@@ -194,10 +194,10 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
         } while (!int.TryParse(Input, out Value));
 
         InputDigits = Input.ToCharArray();
-        value1 = InputDigits[0] - '0' - 1;
-        value2 = InputDigits[1] - '0' - 1;
-        if (InputDigits.Length < 3)
+        if (InputDigits.Length == 2)
         {
+            value1 = InputDigits[0] - '0' - 1;
+            value2 = InputDigits[1] - '0' - 1;
             if (value1 >= 0 && value2 >= 0 && value1 <= MaxValue - 1 && value2 <= MaxValue - 1)
             {
 
