@@ -60,13 +60,14 @@ void GameLoop()
     while (true)
     {
         Console.Clear();
-        //player shoots, 
-
+        //player 1 shoots, 
+        //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
         (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, board2, ShotBoard1, "player1", p2Health);
         board2 = P1Shot.Item1;
         ShotBoard1 = P1Shot.Item2;
         p2Health = P1Shot.Item3;
 
+        //Has player 2 lost all their ships?
         if (p2Health <= 0)
         {
             writeText("Player 1 has won!", "Green");
@@ -75,11 +76,14 @@ void GameLoop()
             break;
         }
         Console.Clear();
+        //player 2 shoots, 
+        //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
         (string[,], string[,], int) P2Shot = ShootPhase(ShipListP1, board1, ShotBoard2, "player2", p1Health);
         board1 = P2Shot.Item1;
         ShotBoard2 = P2Shot.Item2;
         p1Health = P2Shot.Item3;
 
+        //has player 1 lost their ships?
         if (p1Health <= 0)
         {
             writeText("Player 2 has won!", "Green");
@@ -94,6 +98,8 @@ void GameLoop()
 //---------------------------------------------------------------------------------------------------------------------------------
 static void DisplayBoard(string[,] board)
 {
+    //function that displays board.
+    // - = nothing, X = hit, O = miss
     for (int i = 0; i < board.GetLength(0); i++)
     {
         for (int j = 0; j < board.GetLength(1); j++)
@@ -117,6 +123,8 @@ static void DisplayBoard(string[,] board)
 //---------------------------------------------------------------------------------------------------------------------------------
 static (Ship, string[,]) ShipGenerator(string[,] board, int shiptype)
 {
+    //generates a ship bases on player input
+    //first asks player for cords (tryshipinput), sets those to be a ship on board, ask rotation, adds more parts to ship (possibly)
     (int, int) ShipCords = TryShipInput(1, 8, board, false);
     board[ShipCords.Item1, ShipCords.Item2] = "X";
     string Rotation = RotationInput();
@@ -125,6 +133,7 @@ static (Ship, string[,]) ShipGenerator(string[,] board, int shiptype)
 }
 static void writeText(string text, string color)
 {
+    //converts text into colored text
     if (color == "Red")
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -141,33 +150,32 @@ static void writeText(string text, string color)
 //---------------------------------------------------------------------------------------------------------------------------------
 static (Ship, Ship, Ship) PlaceShip(string[,] board)
 {
+    //creates 3 ships for a player
+    //shows players board, uses shipgenerator to create a ship based on input,
+    //uses temporary board to make sure player does not place ships on another ship
+    (Ship, string[,]) returned;
+    Ship newship;
+    List<Ship> ships = new();
+
+    for(int i = 3; i > 0; i--){
     DisplayBoard(board);
-    writeText("Place your Largest ship(3), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", "Green");
-    var returned = ShipGenerator(board, 3);
-    Ship Big = returned.Item1;
+    writeText($"Place your ship(size: {i}), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", "Green");
+    returned = ShipGenerator(board, i);
+    newship = returned.Item1;
+    ships.Add(newship);
     board = returned.Item2;
     Thread.Sleep(1000);
-    Console.Clear();
+    Console.Clear();  
+    }
 
-    DisplayBoard(board);
-    writeText("Place your second largest ship(2), write a row(1-8) and a column (1-8) where the left/bottom part of the ship is going to be", "Green");
-    returned = ShipGenerator(board, 2);
-    Ship Medium = returned.Item1;
-    board = returned.Item2;
     Thread.Sleep(1000);
-    Console.Clear();
-
-    DisplayBoard(board);
-    writeText("Place your smallest ship(1), write a row(1-8) and a column (1-8) where you want the ship to be", "Green");
-    Ship Small = ShipGenerator(board, 1).Item1;
-    Thread.Sleep(1000);
-    return (Big, Medium, Small);
+    return (ships[0], ships[1], ships[2]);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-
 static string RotationInput()
 {
     string rotation;
+    //makes player write in a rotation vertical or horizontal
     do
     {
         Console.WriteLine("What rotation should the ship be (Vertical=(v) or Horizontal=(h))");
@@ -184,23 +192,27 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
     char[] InputDigits;
     int value1;
     int value2;
+    //here we ask player to type in a value,
+    //player input is made sure to be two characters, and it is an integer inside of the board.
     while (true)
     {
         do
         {
             writeText($"Write a value  {MinValue} through {MaxValue} for a row and a column (ex 37)", "Green");
             Input = Console.ReadLine() ?? "";
-
+        //checks if it is an int
         } while (!int.TryParse(Input, out Value));
 
         InputDigits = Input.ToCharArray();
+        //checks if it was just two numbers
         if (InputDigits.Length == 2)
         {
             value1 = InputDigits[0] - '0' - 1;
             value2 = InputDigits[1] - '0' - 1;
+            //checks if value was inside the board
             if (value1 >= 0 && value2 >= 0 && value1 <= MaxValue - 1 && value2 <= MaxValue - 1)
             {
-
+                //is player shooting is checked, if it isnt, we need to make sure cordinates arent filled by another ship
                 if (shooting != true)
                 {
                     if (board[value1, value2] == null)
@@ -233,10 +245,13 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
 
 (string[,], string[,], int) ShootPhase(List<Ship> DefendingShips, string[,] DefendingBoard, string[,] HitBoard, string ShootingPlayer, int defendingHealth)
 {
+    //displays board and asks where player wishes to shoot
     DisplayBoard(HitBoard);
     writeText(ShootingPlayer + ":    where do you wish to shoot?", "Green");
+    //makes sure the given value is a possible position
     (int, int) shot = TryShipInput(1, 8, HitBoard, true);
 
+    //here we check if a ship is on given position, and then marks the defending board and shot board depending on if a hit or not
     if (DefendingBoard[shot.Item1, shot.Item2] == "X")
     {
         DefendingBoard[shot.Item1, shot.Item2] = "O";
@@ -244,6 +259,7 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
         HitBoard[shot.Item1, shot.Item2] = "X";
         foreach (Ship ship in DefendingShips)
         {
+            //Checks if the ship has any more cordinates (hp) if not, it is sunked and player lost a ship
             foreach ((int, int) Cordinates in ship.Cords)
             {
                 if (shot.Item1 == Cordinates.Item1 && shot.Item2 == Cordinates.Item2)

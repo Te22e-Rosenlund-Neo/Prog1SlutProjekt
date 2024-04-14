@@ -13,6 +13,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
     this.shiptype = Shiptype;
     Cord1 = Cord;
 
+    //here we check for edge cases, if we are on a edge, we move the ship upwards on step (only if 2 or 3 size)
     if(Shiptype > 1){
         if(Cord == (0,0)){
             Cord = (1,0);
@@ -28,6 +29,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
             Console.WriteLine("Cordinate was moved due to corner placement not working");
         }
     }
+    //defaults a certain rotation so that other positions of the ship arent outside the map
     if(shiptype == 3){ 
         if(Cord1.Item1 == 0 || Cord1.Item1 == 7){
         rotation = "h";
@@ -37,6 +39,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         Console.WriteLine("Defaulted to vertical, as ship cannot be outside of the map");
        }
     }
+    //defaults a certain rotation so that other positions of the ship arent outside the map
     if(shiptype == 2){
         if(Cord1.Item2 == 7){
             rotation = "v";
@@ -47,7 +50,7 @@ public Ship(int Shiptype, string rotation, (int, int) Cord){
         }
     }
 
-
+     //here we add cordinates to the ships cordinate list, as if ship is larger than 1, all spaces must be hit for a sink to happen
     if(Shiptype == 2){
         if(rotation.ToLower() == "v"){
             Cord2 = (Cord1.Item1-1, Cord1.Item2);
