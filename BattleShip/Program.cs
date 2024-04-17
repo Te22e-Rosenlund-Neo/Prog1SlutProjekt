@@ -3,10 +3,10 @@
 // O = shot but miss
 // X = shot with hit, or your ship location
 // - = not shot at all, or empty space
-string[,] board1 = new string[8, 8];
-string[,] board2 = new string[8, 8];
-int p1Health;
-int p2Health;
+string[,] Board1 = new string[8, 8];
+string[,] Board2 = new string[8, 8];
+int P1Health;
+int P2Health;
 string[,] ShotBoard1 = new string[8, 8];
 string[,] ShotBoard2 = new string[8, 8];
 GameLoop();
@@ -14,12 +14,12 @@ GameLoop();
 void GameLoop()
 {
     // 3 = shipcount
-    p1Health = 3;
-    p2Health = 3;
-    writeText("Player 1", ConsoleColor.Green);
+    P1Health = 3;
+    P2Health = 3;
+    WriteText("Player 1", ConsoleColor.Green);
     Thread.Sleep(1000);
     //asks player to place their ships
-    (Ship, Ship, Ship) ShipsP1 = PlaceShip(board1);
+    (Ship, Ship, Ship) ShipsP1 = PlaceShip(Board1);
     List<Ship> ShipListP1 = new(){
     ShipsP1.Item1, ShipsP1.Item2, ShipsP1.Item3
 };
@@ -28,18 +28,18 @@ void GameLoop()
     {
         foreach (var cord in Instance.Cords)
         {
-            board1[cord.Item1, cord.Item2] = "X";
+            Board1[cord.Item1, cord.Item2] = "X";
         }
     }
     //shows board
-    DisplayBoard(board1);
+    DisplayBoard(Board1);
     Thread.Sleep(2500);
     Console.Clear();
 
     //asks player to place their ships
-    writeText("Player 2", ConsoleColor.Green);
+    WriteText("Player 2", ConsoleColor.Green);
     Thread.Sleep(1000);
-    (Ship, Ship, Ship) ShipsP2 = PlaceShip(board2);
+    (Ship, Ship, Ship) ShipsP2 = PlaceShip(Board2);
     List<Ship> ShipListP2 = new(){
     ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
 };
@@ -48,11 +48,11 @@ void GameLoop()
     {
         foreach (var cord2 in Instance2.Cords)
         {
-            board2[cord2.Item1, cord2.Item2] = "X";
+            Board2[cord2.Item1, cord2.Item2] = "X";
         }
     }
     //shows board
-    DisplayBoard(board2);
+    DisplayBoard(Board2);
     Thread.Sleep(2500);
     Console.Clear();
 
@@ -62,37 +62,37 @@ void GameLoop()
         Console.Clear();
         //player 1 shoots, 
         //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
-        (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, board2, ShotBoard1, "player1", p2Health);
-        board2 = P1Shot.Item1;
+        (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, Board2, ShotBoard1, "player1", P2Health);
+        Board2 = P1Shot.Item1;
         ShotBoard1 = P1Shot.Item2;
-        p2Health = P1Shot.Item3;
+        P2Health = P1Shot.Item3;
 
         //Has player 2 lost all their ships?
-        if (p2Health <= 0)
+        if (P2Health <= 0)
         {
-            writeText("Player 1 has won!", ConsoleColor.Green);
-            writeText("Final Board:     ", ConsoleColor.Green);
-            DisplayBoard(board1);
+            WriteText("Player 1 has won!", ConsoleColor.Green);
+            WriteText("Final Board:     ", ConsoleColor.Green);
+            DisplayBoard(Board1);
             break;
         }
         Console.Clear();
         //player 2 shoots, 
         //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
-        (string[,], string[,], int) P2Shot = ShootPhase(ShipListP1, board1, ShotBoard2, "player2", p1Health);
-        board1 = P2Shot.Item1;
+        (string[,], string[,], int) P2Shot = ShootPhase(ShipListP1, Board1, ShotBoard2, "player2", P1Health);
+        Board1 = P2Shot.Item1;
         ShotBoard2 = P2Shot.Item2;
-        p1Health = P2Shot.Item3;
+        P1Health = P2Shot.Item3;
 
         //has player 1 lost their ships?
-        if (p1Health <= 0)
+        if (P1Health <= 0)
         {
-            writeText("Player 2 has won!", ConsoleColor.Green);
-            writeText("Final Board:     ", ConsoleColor.Green);
-            DisplayBoard(board2);
+            WriteText("Player 2 has won!", ConsoleColor.Green);
+            WriteText("Final Board:     ", ConsoleColor.Green);
+            DisplayBoard(Board2);
             break;
         }
     }
-    writeText("Game Finished!", ConsoleColor.Red);
+    WriteText("Game Finished!", ConsoleColor.Red);
     Thread.Sleep(15000);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -121,18 +121,18 @@ static void DisplayBoard(string[,] board)
     }
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-static (Ship, string[,]) ShipGenerator(string[,] board, int shiptype)
+static (Ship, string[,]) ShipGenerator(string[,] board, int shipType)
 {
     //generates a ship bases on player input
     //first asks player for cords (tryshipinput), sets those to be a ship on board, ask rotation, adds more parts to ship (possibly)
     (int, int) ShipCords = TryShipInput(1, 8, board, false);
     board[ShipCords.Item1, ShipCords.Item2] = "X";
     string Rotation = RotationInput();
-    Ship ship = new Ship(shiptype, Rotation, (ShipCords.Item1, ShipCords.Item2));
+    Ship ship = new Ship(shipType, Rotation, (ShipCords.Item1, ShipCords.Item2));
     return (ship, board);
 }
 //-----------------------------------------------------------------------------------------------------------------
-static void writeText(string text, ConsoleColor color)
+static void WriteText(string text, ConsoleColor color)
 {
     //converts text into colored text
     Console.ForegroundColor = color;
@@ -152,7 +152,7 @@ static (Ship, Ship, Ship) PlaceShip(string[,] board)
     for (int i = 3; i > 0; i--)
     {
         DisplayBoard(board);
-        writeText($"Place your ship(size: {i}), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", ConsoleColor.Green);
+        WriteText($"Place your ship(size: {i}), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", ConsoleColor.Green);
         returned = ShipGenerator(board, i);
         newship = returned.Item1;
         ships.Add(newship);
@@ -191,7 +191,7 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
     {
         do
         {
-            writeText($"Write a value  {MinValue} through {MaxValue} for a row and a column (ex 37)", ConsoleColor.Green);
+            WriteText($"Write a value  {MinValue} through {MaxValue} for a row and a column (ex 37)", ConsoleColor.Green);
             Input = Console.ReadLine() ?? "";
             //checks if it is an int
         } while (!int.TryParse(Input, out Value));
@@ -214,7 +214,7 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
                     }
                     else
                     {
-                        writeText("You already have a ship touching this position!!!", ConsoleColor.Red);
+                        WriteText("You already have a ship touching this position!!!", ConsoleColor.Red);
                     }
                 }
                 else
@@ -240,7 +240,7 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
 {
     //displays board and asks where player wishes to shoot
     DisplayBoard(HitBoard);
-    writeText(ShootingPlayer + ":    where do you wish to shoot?", ConsoleColor.Green);
+    WriteText(ShootingPlayer + ":    where do you wish to shoot?", ConsoleColor.Green);
     //makes sure the given value is a possible position
     (int, int) shot = TryShipInput(1, 8, HitBoard, true);
 
