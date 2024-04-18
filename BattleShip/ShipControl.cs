@@ -40,6 +40,8 @@ namespace ShipClass
                     Console.WriteLine("Cordinate was moved due to corner placement not working");
                 }
             }
+
+            Cords.Add(Cord1);
             //defaults a certain rotation so that other positions of the ship arent outside the map
             if (shiptype == 3)
             {
