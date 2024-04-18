@@ -7,6 +7,7 @@ namespace ShipClass
         string rotation;
         public int ShipHp;
         (int, int) Cord1, Cord2, Cord3;
+        //list as size in going to be dynamic depending on shiptype
         public List<(int, int)> Cords = new();
 
         public Ship(int Shiptype, string rotation, (int, int) Cord)
