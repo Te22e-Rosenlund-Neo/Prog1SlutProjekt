@@ -3,56 +3,56 @@
 // O = shot but miss
 // X = shot with hit, or your ship location
 // - = not shot at all, or empty space
-string[,] Board1 = new string[8, 8];
-string[,] Board2 = new string[8, 8];
-int P1Health;
-int P2Health;
-string[,] ShotBoard1 = new string[8, 8];
-string[,] ShotBoard2 = new string[8, 8];
+string[,] board1 = new string[8, 8];
+string[,] board2 = new string[8, 8];
+int p1Health;
+int p2Health;
+string[,] shotBoard1 = new string[8, 8];
+string[,] shotBoard2 = new string[8, 8];
 GameLoop();
 //---------------------------------------------------------------------------------------------------------------------------------
 void GameLoop()
 {
     // 3 = shipcount
-    P1Health = 3;
-    P2Health = 3;
+    p1Health = 3;
+    p2Health = 3;
     WriteText("Player 1", ConsoleColor.Green);
     Thread.Sleep(1000);
     //asks player to place their ships
-    (Ship, Ship, Ship) ShipsP1 = PlaceShip(Board1);
-    List<Ship> ShipListP1 = new(){
-    ShipsP1.Item1, ShipsP1.Item2, ShipsP1.Item3
+    (Ship, Ship, Ship) shipsP1 = PlaceShip(board1);
+    List<Ship> shipListP1 = new(){
+    shipsP1.Item1, shipsP1.Item2, shipsP1.Item3
 };
     //sets players ship cordinates to be on their board
-    foreach (Ship Instance in ShipListP1)
+    foreach (Ship instance in shipListP1)
     {
-        foreach (var cord in Instance.Cords)
+        foreach (var cord in instance.Cords)
         {
-            Board1[cord.Item1, cord.Item2] = "X";
+            board1[cord.Item1, cord.Item2] = "X";
         }
     }
     //shows board
-    DisplayBoard(Board1);
+    DisplayBoard(board1);
     Thread.Sleep(2500);
     Console.Clear();
 
     //asks player to place their ships
     WriteText("Player 2", ConsoleColor.Green);
     Thread.Sleep(1000);
-    (Ship, Ship, Ship) ShipsP2 = PlaceShip(Board2);
-    List<Ship> ShipListP2 = new(){
-    ShipsP2.Item1, ShipsP2.Item2, ShipsP2.Item3
+    (Ship, Ship, Ship) shipsP2 = PlaceShip(board2);
+    List<Ship> shipListP2 = new(){
+    shipsP2.Item1, shipsP2.Item2, shipsP2.Item3
 };
     //sets players ship cordinates to be on their board
-    foreach (Ship Instance2 in ShipListP2)
+    foreach (Ship instance2 in shipListP2)
     {
-        foreach (var cord2 in Instance2.Cords)
+        foreach (var cord2 in instance2.Cords)
         {
-            Board2[cord2.Item1, cord2.Item2] = "X";
+            board2[cord2.Item1, cord2.Item2] = "X";
         }
     }
     //shows board
-    DisplayBoard(Board2);
+    DisplayBoard(board2);
     Thread.Sleep(2500);
     Console.Clear();
 
@@ -62,33 +62,33 @@ void GameLoop()
         Console.Clear();
         //player 1 shoots, 
         //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
-        (string[,], string[,], int) P1Shot = ShootPhase(ShipListP2, Board2, ShotBoard1, "player1", P2Health);
-        Board2 = P1Shot.Item1;
-        ShotBoard1 = P1Shot.Item2;
-        P2Health = P1Shot.Item3;
+        (string[,], string[,], int) p1Shot = ShootPhase(shipListP2, board2, shotBoard1, "player1", p2Health);
+        board2 = p1Shot.Item1;
+        shotBoard1 = p1Shot.Item2;
+        p2Health = p1Shot.Item3;
 
         //Has player 2 lost all their ships?
-        if (P2Health <= 0)
+        if (p2Health <= 0)
         {
             WriteText("Player 1 has won!", ConsoleColor.Green);
             WriteText("Final Board:     ", ConsoleColor.Green);
-            DisplayBoard(Board1);
+            DisplayBoard(board1);
             break;
         }
         Console.Clear();
         //player 2 shoots, 
         //method returns 2 boards, one where we display where we shot, 1 updated defending board, and health
-        (string[,], string[,], int) P2Shot = ShootPhase(ShipListP1, Board1, ShotBoard2, "player2", P1Health);
-        Board1 = P2Shot.Item1;
-        ShotBoard2 = P2Shot.Item2;
-        P1Health = P2Shot.Item3;
+        (string[,], string[,], int) P2Shot = ShootPhase(shipListP1, board1, shotBoard2, "player2", p1Health);
+        board1 = P2Shot.Item1;
+        shotBoard2 = P2Shot.Item2;
+        p1Health = P2Shot.Item3;
 
         //has player 1 lost their ships?
-        if (P1Health <= 0)
+        if (p1Health <= 0)
         {
             WriteText("Player 2 has won!", ConsoleColor.Green);
             WriteText("Final Board:     ", ConsoleColor.Green);
-            DisplayBoard(Board2);
+            DisplayBoard(board2);
             break;
         }
     }
@@ -125,11 +125,11 @@ static (Ship, string[,]) ShipGenerator(string[,] board, int shipType)
 {
     //generates a ship bases on player input
     //first asks player for cords (tryshipinput), sets those to be a ship on board, ask rotation, adds more parts to ship (possibly)
-    (int, int) ShipCords = TryShipInput(1, 8, board, false);
-    board[ShipCords.Item1, ShipCords.Item2] = "X";
-    string Rotation = RotationInput();
-    Ship ship = new Ship(shipType, Rotation, (ShipCords.Item1, ShipCords.Item2));
-    return (ship, board);
+    (int, int) shipCords = TryShipInput(1, 8, board, false);
+    board[shipCords.Item1, shipCords.Item2] = "X";
+    string rotation = RotationInput();
+    Ship Ship = new Ship(shipType, rotation, (shipCords.Item1, shipCords.Item2));
+    return (Ship, board);
 }
 //-----------------------------------------------------------------------------------------------------------------
 static void WriteText(string text, ConsoleColor color)
@@ -146,7 +146,7 @@ static (Ship, Ship, Ship) PlaceShip(string[,] board)
     //shows players board, uses shipgenerator to create a ship based on input,
     //uses temporary board to make sure player does not place ships on another ship
     (Ship, string[,]) returned;
-    Ship newship;
+    Ship newShip;
     List<Ship> ships = new();
 
     for (int i = 3; i > 0; i--)
@@ -154,8 +154,8 @@ static (Ship, Ship, Ship) PlaceShip(string[,] board)
         DisplayBoard(board);
         WriteText($"Place your ship(size: {i}), Write a row(1-8) and a column (1-8) where you want the center of your ship to be", ConsoleColor.Green);
         returned = ShipGenerator(board, i);
-        newship = returned.Item1;
-        ships.Add(newship);
+        newShip = returned.Item1;
+        ships.Add(newShip);
         board = returned.Item2;
         Thread.Sleep(1000);
         Console.Clear();
@@ -178,11 +178,11 @@ static string RotationInput()
     return rotation;
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool shooting)
+static (int, int) TryShipInput(int minValue, int maxValue, string[,] board, bool shooting)
 {
-    int Value;
-    string Input;
-    char[] InputDigits;
+    int value;
+    string input;
+    char[] inputDigits;
     int value1;
     int value2;
     //here we ask player to type in a value,
@@ -191,19 +191,22 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
     {
         do
         {
-            WriteText($"Write a value  {MinValue} through {MaxValue} for a row and a column (ex 37)", ConsoleColor.Green);
-            Input = Console.ReadLine() ?? "";
+            WriteText($"Write a value  {minValue} through {maxValue} for a row and a column (ex 37)", ConsoleColor.Green);
+            input = Console.ReadLine() ?? "";
             //checks if it is an int
-        } while (!int.TryParse(Input, out Value));
+        } while (!int.TryParse(input, out value));
 
-        InputDigits = Input.ToCharArray();
+        inputDigits = input.ToCharArray();
         //checks if it was just two numbers
-        if (InputDigits.Length == 2)
+        if (inputDigits.Length == 2)
         {
-            value1 = InputDigits[0] - '0' - 1;
-            value2 = InputDigits[1] - '0' - 1;
+            value1 = inputDigits[0] - '0' - 1;
+            Console.WriteLine(value1);
+            value2 = inputDigits[1] - '0' - 1;
+            Console.WriteLine(value2);
+            Thread.Sleep(2500);
             //checks if value was inside the board
-            if (value1 >= 0 && value2 >= 0 && value1 <= MaxValue - 1 && value2 <= MaxValue - 1)
+            if (value1 >= 0 && value2 >= 0 && value1 <= maxValue - 1 && value2 <= maxValue - 1)
             {
                 //is player shooting is checked, if it isnt, we need to make sure cordinates arent filled by another ship
                 if (shooting != true)
@@ -229,28 +232,28 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
             }
         }
     }
-    (int, int) Values = (value1, value2);
-    return Values;
+    (int, int) values = (value1, value2);
+    return values;
 
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 
-(string[,], string[,], int) ShootPhase(List<Ship> DefendingShips, string[,] DefendingBoard, string[,] HitBoard, string ShootingPlayer, int defendingHealth)
+(string[,], string[,], int) ShootPhase(List<Ship> defendingShips, string[,] defendingBoard, string[,] hitBoard, string shootingPlayer, int defendingHealth)
 {
     //displays board and asks where player wishes to shoot
-    DisplayBoard(HitBoard);
-    WriteText(ShootingPlayer + ":    where do you wish to shoot?", ConsoleColor.Green);
+    DisplayBoard(hitBoard);
+    WriteText(shootingPlayer + ":    where do you wish to shoot?", ConsoleColor.Green);
     //makes sure the given value is a possible position
-    (int, int) shot = TryShipInput(1, 8, HitBoard, true);
+    (int, int) shot = TryShipInput(1, 8, hitBoard, true);
 
     //here we check if a ship is on given position, and then marks the defending board and shot board depending on if a hit or not
-    if (DefendingBoard[shot.Item1, shot.Item2] == "X")
+    if (defendingBoard[shot.Item1, shot.Item2] == "X")
     {
-        DefendingBoard[shot.Item1, shot.Item2] = "O";
+        defendingBoard[shot.Item1, shot.Item2] = "O";
         Console.WriteLine("Hit!");
-        HitBoard[shot.Item1, shot.Item2] = "X";
-        foreach (Ship ship in DefendingShips)
+        hitBoard[shot.Item1, shot.Item2] = "X";
+        foreach (Ship ship in defendingShips)
         {
             //Checks if the ship has any more cordinates (hp) if not, it is sunked and player lost a ship
             foreach ((int, int) Cordinates in ship.Cords)
@@ -271,11 +274,11 @@ static (int, int) TryShipInput(int MinValue, int MaxValue, string[,] board, bool
     else
     {
         Console.WriteLine("Miss");
-        HitBoard[shot.Item1, shot.Item2] = "O";
+        hitBoard[shot.Item1, shot.Item2] = "O";
     }
     Console.WriteLine($"enemy ship count: {defendingHealth}");
     Thread.Sleep(1500);
-    return (DefendingBoard, HitBoard, defendingHealth);
+    return (defendingBoard, hitBoard, defendingHealth);
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------
